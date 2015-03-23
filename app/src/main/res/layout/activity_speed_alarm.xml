@@ -1,0 +1,155 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".SpeedAlarmActivity">
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/LatLabel"
+        android:text="Latitude:"
+        android:editable="false"
+        android:clickable="false"
+        android:focusable="false"
+        android:layout_alignParentTop="true"
+        android:layout_alignRight="@+id/LonLabel"
+        android:layout_alignEnd="@+id/LonLabel" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/LonLabel"
+        android:text="Longitude:"
+        android:editable="false"
+        android:clickable="false"
+        android:focusable="false"
+        android:layout_below="@+id/LatLabel"
+        android:layout_alignRight="@+id/DistanceLabel"
+        android:layout_alignEnd="@+id/DistanceLabel" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/LatLabel2"
+        android:text="Old Lat:"
+        android:editable="false"
+        android:clickable="false"
+        android:focusable="false"
+        android:layout_below="@+id/LonLabel"
+        android:layout_alignRight="@+id/LonLabel2"
+        android:layout_alignEnd="@+id/LonLabel2" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/LonLabel2"
+        android:text="Old Lon:"
+        android:editable="false"
+        android:clickable="false"
+        android:focusable="false"
+        android:layout_below="@+id/LatLabel2"
+        android:layout_alignRight="@+id/DistanceLabel"
+        android:layout_alignEnd="@+id/DistanceLabel" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/DistanceLabel"
+        android:text="Dist m:"
+        android:editable="false"
+        android:clickable="false"
+        android:focusable="false"
+        android:layout_below="@+id/LonLabel2"
+        android:layout_alignRight="@+id/SpeedLabel"
+        android:layout_alignEnd="@+id/SpeedLabel" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/SpeedLabel"
+        android:layout_below="@+id/DistanceLabel"
+        android:text="Spd m/nm:"
+        android:editable="false"
+        android:clickable="false"
+        android:focusable="false" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/LatVal"
+        android:layout_above="@+id/LonLabel"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:editable="false"
+        android:clickable="false"
+        android:focusable="false"
+        android:layout_toRightOf="@+id/DistanceLabel"
+        android:layout_toEndOf="@+id/DistanceLabel" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/LonVal"
+        android:layout_alignBottom="@+id/LonLabel"
+        android:layout_alignRight="@+id/LatVal"
+        android:layout_alignEnd="@+id/LatVal"
+        android:editable="false"
+        android:clickable="false"
+        android:focusable="false"
+        android:layout_alignLeft="@+id/LatVal"
+        android:layout_alignStart="@+id/LatVal" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/LatVal2"
+        android:layout_alignTop="@+id/LatLabel2"
+        android:layout_alignRight="@+id/LonVal"
+        android:layout_alignEnd="@+id/LonVal"
+        android:editable="false"
+        android:clickable="false"
+        android:focusable="false"
+        android:layout_alignLeft="@+id/LonVal"
+        android:layout_alignStart="@+id/LonVal" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/LonVal2"
+        android:layout_above="@+id/DistanceLabel"
+        android:layout_alignRight="@+id/LatVal2"
+        android:layout_alignEnd="@+id/LatVal2"
+        android:editable="false"
+        android:clickable="false"
+        android:focusable="false"
+        android:layout_toRightOf="@+id/DistanceLabel"
+        android:layout_toEndOf="@+id/DistanceLabel" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/DistanceVal"
+        android:layout_above="@+id/SpeedLabel"
+        android:layout_alignRight="@+id/LonVal2"
+        android:layout_alignEnd="@+id/LonVal2"
+        android:editable="false"
+        android:clickable="false"
+        android:focusable="false"
+        android:layout_toRightOf="@+id/DistanceLabel"
+        android:layout_toEndOf="@+id/DistanceLabel" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/SpeedVal"
+        android:layout_alignBottom="@+id/SpeedLabel"
+        android:layout_alignRight="@+id/DistanceVal"
+        android:layout_alignEnd="@+id/DistanceVal"
+        android:editable="false"
+        android:clickable="false"
+        android:focusable="false"
+        android:layout_toRightOf="@+id/DistanceLabel"
+        android:layout_toEndOf="@+id/DistanceLabel" />
+</RelativeLayout>
