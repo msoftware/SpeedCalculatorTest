@@ -14,6 +14,7 @@
         android:clickable="false"
         android:focusable="false"
         android:layout_alignParentTop="true"
+        android:layout_toStartOf="@+id/LatVal"
         android:layout_alignRight="@+id/LonLabel"
         android:layout_alignEnd="@+id/LonLabel" />
 
@@ -25,9 +26,7 @@
         android:editable="false"
         android:clickable="false"
         android:focusable="false"
-        android:layout_below="@+id/LatLabel"
-        android:layout_alignRight="@+id/DistanceLabel"
-        android:layout_alignEnd="@+id/DistanceLabel" />
+        android:layout_below="@+id/LatLabel" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -38,8 +37,8 @@
         android:clickable="false"
         android:focusable="false"
         android:layout_below="@+id/LonLabel"
-        android:layout_alignRight="@+id/LonLabel2"
-        android:layout_alignEnd="@+id/LonLabel2" />
+        android:layout_alignRight="@+id/LonLabel"
+        android:layout_alignEnd="@+id/LonLabel" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -50,8 +49,8 @@
         android:clickable="false"
         android:focusable="false"
         android:layout_below="@+id/LatLabel2"
-        android:layout_alignRight="@+id/DistanceLabel"
-        android:layout_alignEnd="@+id/DistanceLabel" />
+        android:layout_alignRight="@+id/LonLabel"
+        android:layout_alignEnd="@+id/LonLabel" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -62,18 +61,20 @@
         android:clickable="false"
         android:focusable="false"
         android:layout_below="@+id/LonLabel2"
-        android:layout_alignRight="@+id/SpeedLabel"
-        android:layout_alignEnd="@+id/SpeedLabel" />
+        android:layout_alignRight="@+id/LonLabel2"
+        android:layout_alignEnd="@+id/LonLabel2" />
 
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/SpeedLabel"
         android:layout_below="@+id/DistanceLabel"
-        android:text="Spd m/nm:"
+        android:text="Spd m/h:"
         android:editable="false"
         android:clickable="false"
-        android:focusable="false" />
+        android:focusable="false"
+        android:layout_alignRight="@+id/LonLabel2"
+        android:layout_alignEnd="@+id/LonLabel2" />
 
     <EditText
         android:layout_width="wrap_content"
