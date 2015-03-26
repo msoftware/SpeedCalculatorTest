@@ -8,17 +8,16 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.Window;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import java.util.Calendar;
 
 
 public class SpeedAlarmActivity extends ActionBarActivity {
 
     final int MILLI_TO_SEC = 1000;
     final int SEC_TO_HOUR = 3600;
+
+    // Allow 15 seconds of error for time calculations
+    final double MILE_TIME_ERROR = 0.15;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,11 +28,6 @@ public class SpeedAlarmActivity extends ActionBarActivity {
                 (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 
         LocationListener locationListener = new LocationListener() {
-            Calendar calendar = Calendar.getInstance();
-
-            final double EARTH_RADIUS_M = 3959;
-            final double EARTH_RADIUS_KM = 6371;
-
             double lonNew, lonOld;
             double latNew, latOld;
 
@@ -45,12 +39,15 @@ public class SpeedAlarmActivity extends ActionBarActivity {
             long timeOld = System.currentTimeMillis();
             long deltaTime;
 
-            double distance, speed;
+            double distance, speed, mileTime;
+            double goalMileTime = 2;
 
             int ticks = 0;
             double speedSum = 0;
 
             boolean firstRun = true;
+
+            String paceText;
 
 
             public void onLocationChanged(Location location) {
@@ -70,7 +67,6 @@ public class SpeedAlarmActivity extends ActionBarActivity {
                 distance = haversine(latOld, lonOld, latNew, lonNew);
 
                 // Add current speed and count number of ticks
-
                 speedSum += (distance / deltaTime) * MILLI_TO_SEC * SEC_TO_HOUR;
                 ticks++;
                 interval = System.currentTimeMillis() - intervalStart; // Calculate display interval
@@ -79,20 +75,25 @@ public class SpeedAlarmActivity extends ActionBarActivity {
                     // Calculate average speed over time elapsed
                     speed = speedSum / ticks;
 
+                    // Assign mileTime estimate
+                    mileTime = 60 / speed;
+
+                    // Assign value to paceText;
+                    checkPace();
+
                     // Update values on screen
-                    updateDisplay(latNew, lonNew, latOld, lonOld, distance, speed);
+                    updateDisplay(distance, speed, mileTime, paceText);
                     ticks = 0;
                     speedSum = 0;
                     intervalStart = System.currentTimeMillis();
                 }
 
-                // Store old Coordinates and time
-                latOld = latNew;
-                lonOld = lonNew;
-                timeOld = timeNew;
+            // Store old Coordinates and time
+            latOld = latNew;
+            lonOld = lonNew;
+            timeOld = timeNew;
 
-            }
-
+        }
 
 
             public void onStatusChanged(String Provider, int status, Bundle extras) {}
@@ -101,24 +102,41 @@ public class SpeedAlarmActivity extends ActionBarActivity {
 
             public void onProviderDisabled(String provider) {}
 
-            private void updateDisplay(double latNew, double lonNew, double latOld, double lonOld, double distance, double speed) {
-                final TextView latVal = (TextView) findViewById(R.id.LatVal);
-                latVal.setText(String.valueOf(latNew));
-
-                final TextView lonVal = (TextView) findViewById(R.id.LonVal);
-                lonVal.setText(String.valueOf(lonNew));
-
-                final TextView latVal2 = (TextView) findViewById(R.id.LatVal2);
-                latVal2.setText(String.valueOf(latOld));
-
-                final TextView lonVal2 = (TextView) findViewById(R.id.LonVal2);
-                lonVal2.setText(String.valueOf(lonOld));
-
+            /**
+             * Updates the display fields of the core activity
+             * @param distance  Distance traveled over time interval
+             * @param speed     Speed traveled at over time interval
+             * @param mileTime  Current time (in minutes) to complete one mile
+             * @param paceText  Prompts user if they're going fast, slow, or correct pace
+             */
+            private void updateDisplay(double distance, double speed, double mileTime, String paceText) {
                 final TextView distanceVal = (TextView) findViewById(R.id.DistanceVal);
-                distanceVal.setText(String.valueOf(distance));
+                distanceVal.setText(String.format("%.2f", distance));
 
                 final TextView speedVal = (TextView) findViewById(R.id.SpeedVal);
-                speedVal.setText(String.valueOf(speed));
+                speedVal.setText(String.format("%.2f", speed));
+
+                final TextView emtVal = (TextView) findViewById(R.id.emtVal);
+                emtVal.setText(String.format("%.2f", mileTime));
+
+                final TextView gmtVal = (TextView) findViewById(R.id.gmtVal);
+                gmtVal.setText(String.format("%.2f", goalMileTime));
+
+                final TextView pace = (TextView) findViewById(R.id.paceView);
+                pace.setText(paceText);
+            }
+
+            /**
+             * Checks current pace and assigns appropriate text
+             */
+            private void checkPace() {
+                if (mileTime > goalMileTime + MILE_TIME_ERROR) {
+                    paceText = "Speed up";
+                } else if (mileTime < goalMileTime - MILE_TIME_ERROR) {
+                    paceText = "Slow Down";
+                } else {
+                    paceText = "Perfect Pace!";
+                }
             }
         };
 
@@ -136,7 +154,6 @@ public class SpeedAlarmActivity extends ActionBarActivity {
      */
     private double haversine(double lat1, double lon1, double lat2, double lon2) {
         final double EARTH_RADIUS_M = 3959;
-        final double EARTH_RADIUS_KM = 6371;
 
         double dLon, dLat, a, c, distance;
 
