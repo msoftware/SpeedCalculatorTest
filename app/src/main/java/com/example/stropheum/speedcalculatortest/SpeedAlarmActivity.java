@@ -9,19 +9,24 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.os.Vibrator;
 
 
 public class SpeedAlarmActivity extends ActionBarActivity {
 
     final int MILLI_TO_SEC = 1000;
     final int SEC_TO_HOUR = 3600;
+    Vibrator vibrator;
 
     // Allow 15 seconds of error for time calculations
-    final double MILE_TIME_ERROR = 0.15;
+    final double MILE_TIME_ERROR = 0.25;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        vibrator  = (Vibrator) this.getSystemService(Context.VIBRATOR_SERVICE);
+
         setContentView(R.layout.activity_speed_alarm);
 
         LocationManager locationManager =
@@ -32,7 +37,8 @@ public class SpeedAlarmActivity extends ActionBarActivity {
             double latNew, latOld;
 
             // Values to track display interval
-            long intervalStart, interval;
+            long paceStartTime, paceDeltaTime;
+            long speedStartTime, speedDeltaTime;
 
             // Values to track computation interval
             long timeNew;
@@ -53,8 +59,10 @@ public class SpeedAlarmActivity extends ActionBarActivity {
             public void onLocationChanged(Location location) {
                 // Calculate change in time
                 if (firstRun) {
-                    intervalStart = System.currentTimeMillis();
+                    paceStartTime = System.currentTimeMillis();
+                    speedStartTime = System.currentTimeMillis();
                     timeOld = System.currentTimeMillis();
+                    updateGmt(goalMileTime);
                     firstRun = false;
                 }
                 timeNew = System.currentTimeMillis();
@@ -69,23 +77,44 @@ public class SpeedAlarmActivity extends ActionBarActivity {
                 // Add current speed and count number of ticks
                 speedSum += (distance / deltaTime) * MILLI_TO_SEC * SEC_TO_HOUR;
                 ticks++;
-                interval = System.currentTimeMillis() - intervalStart; // Calculate display interval
+                paceDeltaTime = System.currentTimeMillis() - paceStartTime;
+                speedDeltaTime = System.currentTimeMillis() - speedStartTime;
 
-                if (interval >= 10000) {
-                    // Calculate average speed over time elapsed
+                if (paceDeltaTime >= 30000) { // Update all values and pace text
                     speed = speedSum / ticks;
-
-                    // Assign mileTime estimate
                     mileTime = 60 / speed;
 
-                    // Assign value to paceText;
                     checkPace();
 
                     // Update values on screen
-                    updateDisplay(distance, speed, mileTime, paceText);
+                    if (speed > 10000) {
+                        speed = 0;
+                    }
+                    updateSpeed(speed);
+                    updateEmt(mileTime);
+                    updatePaceText(paceText);
+
                     ticks = 0;
                     speedSum = 0;
-                    intervalStart = System.currentTimeMillis();
+                    paceStartTime = System.currentTimeMillis();
+                } else if (speedDeltaTime >= 5000) { // Update values without interfering with average
+                    speed = speedSum / ticks;
+                    mileTime = 60 / speed;
+
+                    if (speed > 10000) {
+                        speed = 0;
+                    }
+                    updateSpeed(speed);
+                    updateEmt(mileTime);
+
+                    // If player resumes proper pace, reset interval timer and prompt pace
+                    if (mileTime > goalMileTime - MILE_TIME_ERROR &&
+                        mileTime < goalMileTime + MILE_TIME_ERROR) {
+                        checkPace();
+                        paceStartTime = System.currentTimeMillis();
+                    }
+
+                    speedStartTime = System.currentTimeMillis();
                 }
 
             // Store old Coordinates and time
@@ -103,25 +132,41 @@ public class SpeedAlarmActivity extends ActionBarActivity {
             public void onProviderDisabled(String provider) {}
 
             /**
-             * Updates the display fields of the core activity
-             * @param distance  Distance traveled over time interval
-             * @param speed     Speed traveled at over time interval
-             * @param mileTime  Current time (in minutes) to complete one mile
-             * @param paceText  Prompts user if they're going fast, slow, or correct pace
+             * Updates the current speed of the user
+             * @param speed the current speed value
              */
-            private void updateDisplay(double distance, double speed, double mileTime, String paceText) {
-                final TextView distanceVal = (TextView) findViewById(R.id.DistanceVal);
-                distanceVal.setText(String.format("%.2f", distance));
-
+            private void updateSpeed(double speed) {
                 final TextView speedVal = (TextView) findViewById(R.id.SpeedVal);
                 speedVal.setText(String.format("%.2f", speed));
+            }
 
+            /**
+             * Updates the current estimated mile time
+             * @param mileTime current EMT
+             */
+            private void updateEmt(double mileTime) {
+                int minutes = (int)mileTime;
+                int seconds = (int)(((mileTime * 100) % 100) * 0.6);
                 final TextView emtVal = (TextView) findViewById(R.id.emtVal);
-                emtVal.setText(String.format("%.2f", mileTime));
+                emtVal.setText(String.format("%d:%02d", minutes, seconds));
+            }
 
+            /**
+             * Updates the current goal mile time
+             * @param goalMileTime new goal mile time
+             */
+            private void updateGmt(double goalMileTime) {
+                int minutes = (int)goalMileTime;
+                int seconds = (int)(((mileTime * 100) % 100) * 0.6);
                 final TextView gmtVal = (TextView) findViewById(R.id.gmtVal);
-                gmtVal.setText(String.format("%.2f", goalMileTime));
+                gmtVal.setText(String.format("%d:%02d", minutes, seconds));
+            }
 
+            /**
+             * Updates the current pace text
+             * @param paceText indicator for user;s current speed in relation to goal time
+             */
+            private void updatePaceText(String paceText) {
                 final TextView pace = (TextView) findViewById(R.id.paceView);
                 pace.setText(paceText);
             }
@@ -132,8 +177,18 @@ public class SpeedAlarmActivity extends ActionBarActivity {
             private void checkPace() {
                 if (mileTime > goalMileTime + MILE_TIME_ERROR) {
                     paceText = "Speed up";
+                    vibrator.vibrate(300);
+                    try {
+                        Thread.sleep(300);
+                    } catch (Exception e) {}
+                    vibrator.vibrate(300);
+                    try {
+                        Thread.sleep(300);
+                    } catch (Exception e) {}
+                    vibrator.vibrate(300);
                 } else if (mileTime < goalMileTime - MILE_TIME_ERROR) {
                     paceText = "Slow Down";
+                    vibrator.vibrate(1000);
                 } else {
                     paceText = "Perfect Pace!";
                 }

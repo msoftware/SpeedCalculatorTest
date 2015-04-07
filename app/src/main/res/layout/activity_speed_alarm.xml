@@ -8,68 +8,37 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/DistanceLabel"
-        android:text="Dist m:"
-        android:editable="false"
-        android:clickable="false"
-        android:focusable="false"
-        android:textSize="@dimen/abc_dropdownitem_icon_width"
-        android:textIsSelectable="false"
-        android:textColor="@color/abc_search_url_text_selected"
-        android:layout_alignParentTop="true"
-        android:layout_alignRight="@+id/SpeedLabel"
-        android:layout_alignEnd="@+id/SpeedLabel" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:id="@+id/SpeedLabel"
-        android:text="Spd m/h:"
+        android:text="Spd m/h:  "
         android:editable="false"
         android:clickable="false"
         android:focusable="false"
         android:textSize="@dimen/abc_dropdownitem_icon_width"
         android:textIsSelectable="false"
         android:textColor="@color/abc_search_url_text_selected"
-        android:layout_below="@+id/DistanceLabel"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/DistanceVal"
+        android:id="@+id/SpeedVal"
         android:editable="false"
         android:clickable="false"
         android:focusable="false"
         android:textSize="@dimen/abc_dropdownitem_icon_width"
         android:textIsSelectable="false"
         android:textColor="@color/abc_search_url_text_selected"
-        android:layout_alignParentTop="true"
-        android:layout_toRightOf="@+id/gmtLabel"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/SpeedLabel"
+        android:layout_toEndOf="@+id/SpeedLabel" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/SpeedVal"
-        android:layout_alignBottom="@+id/SpeedLabel"
-        android:layout_alignRight="@+id/DistanceVal"
-        android:layout_alignEnd="@+id/DistanceVal"
-        android:editable="false"
-        android:clickable="false"
-        android:focusable="false"
-        android:layout_toRightOf="@+id/DistanceLabel"
-        android:layout_toEndOf="@+id/DistanceLabel"
-        android:textSize="@dimen/abc_dropdownitem_icon_width"
-        android:textIsSelectable="false"
-        android:textColor="@color/abc_search_url_text_selected" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="EMT:"
+        android:text="EMT:  "
         android:id="@+id/emtLabel"
         android:editable="false"
         android:clickable="false"
@@ -85,21 +54,22 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/emtVal"
-        android:layout_below="@+id/SpeedVal"
-        android:layout_toRightOf="@+id/SpeedLabel"
-        android:layout_alignRight="@+id/SpeedVal"
-        android:layout_alignEnd="@+id/SpeedVal"
         android:editable="false"
         android:clickable="false"
         android:focusable="false"
         android:textSize="@dimen/abc_dropdownitem_icon_width"
         android:textIsSelectable="false"
-        android:textColor="@color/abc_search_url_text_selected" />
+        android:textColor="@color/abc_search_url_text_selected"
+        android:layout_below="@+id/SpeedVal"
+        android:layout_alignRight="@+id/SpeedVal"
+        android:layout_alignEnd="@+id/SpeedVal"
+        android:layout_toRightOf="@+id/emtLabel"
+        android:layout_toEndOf="@+id/emtLabel" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="GMT:"
+        android:text="GMT:  "
         android:id="@+id/gmtLabel"
         android:editable="false"
         android:clickable="false"
@@ -108,8 +78,8 @@
         android:textIsSelectable="false"
         android:textColor="@color/abc_search_url_text_selected"
         android:layout_below="@+id/emtLabel"
-        android:layout_alignLeft="@+id/emtLabel"
-        android:layout_alignStart="@+id/emtLabel" />
+        android:layout_alignRight="@+id/emtLabel"
+        android:layout_alignEnd="@+id/emtLabel" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -120,11 +90,12 @@
         android:focusable="false"
         android:textSize="@dimen/abc_dropdownitem_icon_width"
         android:textIsSelectable="false"
-        android:layout_alignBottom="@+id/gmtLabel"
-        android:layout_toRightOf="@+id/gmtLabel"
+        android:textColor="@color/abc_search_url_text_selected"
+        android:layout_below="@+id/emtVal"
         android:layout_alignRight="@+id/emtVal"
         android:layout_alignEnd="@+id/emtVal"
-        android:textColor="@color/abc_search_url_text_selected" />
+        android:layout_toRightOf="@+id/emtLabel"
+        android:layout_toEndOf="@+id/emtLabel" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -138,7 +109,7 @@
         android:textStyle="bold"
         android:textSize="@dimen/abc_action_bar_progress_bar_size"
         android:textColor="@color/abc_search_url_text_selected"
-        android:layout_below="@+id/gmtVal"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="136dp" />
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
+
 </RelativeLayout>
