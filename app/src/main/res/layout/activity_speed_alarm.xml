@@ -110,6 +110,7 @@
         android:textSize="@dimen/abc_action_bar_progress_bar_size"
         android:textColor="@color/abc_search_url_text_selected"
         android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:text="Waiting for GPS" />
 
 </RelativeLayout>

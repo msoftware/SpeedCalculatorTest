@@ -61,8 +61,12 @@ public class SpeedAlarmActivity extends ActionBarActivity {
                 if (firstRun) {
                     paceStartTime = System.currentTimeMillis();
                     speedStartTime = System.currentTimeMillis();
-                    timeOld = System.currentTimeMillis();
+                    //timeOld = System.currentTimeMillis();
+                    lonOld = Math.toRadians(location.getLongitude());
+                    latOld = Math.toRadians(location.getLongitude());
                     updateGmt(goalMileTime);
+                    paceText = "Begin!";
+                    updatePaceText(paceText);
                     firstRun = false;
                 }
                 timeNew = System.currentTimeMillis();
@@ -73,6 +77,7 @@ public class SpeedAlarmActivity extends ActionBarActivity {
                 latNew = Math.toRadians(location.getLatitude());
 
                 distance = haversine(latOld, lonOld, latNew, lonNew);
+                if (distance > 1000) { distance = 0; }
 
                 // Add current speed and count number of ticks
                 speedSum += (distance / deltaTime) * MILLI_TO_SEC * SEC_TO_HOUR;
@@ -111,7 +116,7 @@ public class SpeedAlarmActivity extends ActionBarActivity {
                     if (mileTime > goalMileTime - MILE_TIME_ERROR &&
                         mileTime < goalMileTime + MILE_TIME_ERROR) {
                         checkPace();
-                        paceStartTime = System.currentTimeMillis();
+                        //paceStartTime = System.currentTimeMillis();
                     }
 
                     speedStartTime = System.currentTimeMillis();
