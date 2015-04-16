@@ -6,6 +6,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -21,6 +22,9 @@ public class SpeedAlarmActivity extends ActionBarActivity {
     // Allow 15 seconds of error for time calculations
     final double MILE_TIME_ERROR = 0.25;
 
+    LocationManager locationManager;
+    LocationListener locationListener;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,10 +33,10 @@ public class SpeedAlarmActivity extends ActionBarActivity {
 
         setContentView(R.layout.activity_speed_alarm);
 
-        LocationManager locationManager =
+        locationManager =
                 (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 
-        LocationListener locationListener = new LocationListener() {
+        locationListener = new LocationListener() {
             double lonNew, lonOld;
             double latNew, latOld;
 
@@ -253,4 +257,12 @@ public class SpeedAlarmActivity extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    @Override
+    public void onBackPressed() {
+        locationManager.removeUpdates(locationListener);
+        finish();
+        return;
+    }
+
 }
