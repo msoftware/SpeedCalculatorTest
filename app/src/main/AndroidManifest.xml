@@ -33,6 +33,12 @@
             android:name=".SpeedAlarmActivity"
             android:label="@string/title_activity_main_menu" >
         </activity>
+
+        <service
+            android:name=".SpeedCalculationService"
+            android:enabled="true"
+            android:exported="true" >
+        </service>
     </application>
 
 </manifest>
