@@ -20,7 +20,7 @@ public class SpeedCalculationService extends Service {
 
     LocationManager locationManager;
     LocationListener locationListener;
-    boolean firstLocationCheck = true;
+    boolean signalFound = false;
 
     // Tracks distance traveled between location calls
     double distanceTraveled = 0;
@@ -31,14 +31,6 @@ public class SpeedCalculationService extends Service {
 
     @Override
     public IBinder onBind(Intent intent) {
-        return binder;
-    }
-
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        // This service runs until it is stopped
-        Toast.makeText(this, "Service Started", Toast.LENGTH_LONG).show();
-
         locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 
         locationListener = new LocationListener() {
@@ -52,11 +44,11 @@ public class SpeedCalculationService extends Service {
 
             public void onLocationChanged(Location location) {
 
-                if (firstLocationCheck) {
+                if (!signalFound) {
                     // Prime old locations for first distance calculation
                     latOld = Math.toRadians(location.getLatitude());
                     lonOld = Math.toRadians(location.getLongitude());
-                    firstLocationCheck = false;
+                    signalFound = true;
                 }
 
                 latNew = Math.toRadians(location.getLatitude());
@@ -82,7 +74,13 @@ public class SpeedCalculationService extends Service {
         };
 
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+        return binder;
+    }
 
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        // This service runs until it is stopped
+        Toast.makeText(this, "Service Started", Toast.LENGTH_LONG).show();
         return START_STICKY;
     }
 
@@ -125,8 +123,8 @@ public class SpeedCalculationService extends Service {
      * Method to check if GPS connection is established
      * @return true if first location check has been completed
      */
-    public boolean gpsSignalFound() {
-        return !this.firstLocationCheck;
+    public boolean searchingForSignal() {
+        return !this.signalFound;
     }
 
     @Override

@@ -15,6 +15,9 @@ import android.widget.TextView;
 import android.os.Vibrator;
 import com.example.stropheum.speedcalculatortest.SpeedCalculationService.SpeedCalculationBinder;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 public class SpeedAlarmActivity extends ActionBarActivity {
 
     public SpeedCalculationService speedCalculator;
@@ -24,7 +27,9 @@ public class SpeedAlarmActivity extends ActionBarActivity {
     final int SEC_TO_HOUR = 3600;
 
     double currentPace, goalPace;
+    double speed;
     String paceText;
+    Intent i;
 
     Vibrator vibrator;
 
@@ -36,88 +41,24 @@ public class SpeedAlarmActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_speed_alarm);
 
-        //Intent i = new Intent(this, SpeedCalculationService.class);
-
-        //bindService(i, speedConnection, Context.BIND_AUTO_CREATE);
-        //startService(i);
+        Intent i = new Intent(this, SpeedCalculationService.class);
 
         // Starts the service for calulating user's speed
-        //startService(new Intent(getBaseContext(), SpeedCalculationService.class)); // was below bind before
+        bindService(i, speedConnection, Context.BIND_AUTO_CREATE);
+        //startService(i);
 
-//        vibrator = (Vibrator) this.getSystemService(Context.VIBRATOR_SERVICE);
-//
-//        double startTime, elapsedTime;
-//        double alertIntervalStart, alertIntervalElapsed;
-//        double speed, goalPace, currentPace;
-//
-//        String paceText = "Waiting for GPS signal";
-//        updatePaceText(paceText);
-//
-//        if (isBound);
-//        // Delays workout until the service finds a signal
-//        //while (!speedCalculator.gpsSignalFound());
-//
-//        // Once GPS connection is established, being the workout
-//        paceText = "Begin!";
-//        updatePaceText(paceText);
-//
-//        ///////////////////
-//        // Part One Begins
-//        /////////////////
-//        startTime = System.currentTimeMillis();
-//        elapsedTime = 0;
-//        alertIntervalStart = startTime; // Initialize 30 second timer on workout start
-//
-//        goalPace = 10.0;
-//        updateGoalPace(goalPace);
-//
-//        do {
-//            // Update time since last alert
-//            alertIntervalElapsed = System.currentTimeMillis() - alertIntervalStart;
-//
-//            //speed = speedCalculator.getCurrentSpeed();
-//            speed = 1;
-//            currentPace = 60 / speed;
-//
-//            // Update speed and pace every second
-//            if (elapsedTime >= 1.0 * MILLI_TO_SEC) {
-//                updateSpeed(speed);
-//                updateCurrentPace(currentPace);
-//            }
-//
-//            // Alerts user if 30 seconds have gone by with no change
-//            if (alertIntervalStart >= 30 * MILLI_TO_SEC) {
-//                paceAlert();
-//                alertIntervalStart = System.currentTimeMillis();
-//            }
-//
-//            // If 5 seconds have elapsed and perfect pace, alert user
-//            if (alertIntervalElapsed >= 5 * MILLI_TO_SEC && checkPace(currentPace, goalPace)) {
-//                paceAlert();
-//                alertIntervalStart = System.currentTimeMillis();
-//            }
-//
-//            elapsedTime = System.currentTimeMillis() - startTime;
-//        } while (elapsedTime < 120 * MILLI_TO_SEC);
-//
-//        paceText = "Workout Complete!";
-//        updatePaceText(paceText);
+        vibrator = (Vibrator) this.getSystemService(Context.VIBRATOR_SERVICE);
 
-//        ///////////////////
-//        // Part Two Begins
-//        /////////////////
-//        startTime = System.currentTimeMillis();
-//        elapsedTime = 0;
-//        alertIntervalStart = startTime; // Initialize 30 second timer on workout start
-//
-//        goalPace = 6.0;
-//
-//        do {
-//
-//            elapsedTime = System.currentTimeMillis() - startTime;
-//        } while (elapsedTime < 60 * MILLI_TO_SEC);
-//
-//
+        double startTime, elapsedTime;
+        double alertIntervalStart, alertIntervalElapsed;
+        double goalPace, currentPace;
+
+        String paceText = "Waiting for GPS signal";
+        updatePaceText(paceText);
+
+        // Once GPS connection is established, being the workout
+        paceText = "Begin!";
+        updatePaceText(paceText);
 
     }
 
@@ -223,7 +164,8 @@ public class SpeedAlarmActivity extends ActionBarActivity {
     @Override
     public void onBackPressed() {
         // Terminate the speed calculation service
-        stopService(new Intent(getBaseContext(), SpeedCalculationService.class));
+        stopService(new Intent(SpeedAlarmActivity.this, SpeedCalculationService.class));
+        unbindService(speedConnection);
         finish();
         return;
     }
@@ -232,8 +174,13 @@ public class SpeedAlarmActivity extends ActionBarActivity {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             SpeedCalculationBinder  binder = (SpeedCalculationBinder) service;
-            speedCalculator = binder.getService();
             isBound = true;
+            speedCalculator = binder.getService();
+
+            // Program hangs here while establishing GPS signal
+            //while(speedCalculator.searchingForSignal());
+
+            beginWorkout();
         }
 
         @Override
@@ -241,4 +188,22 @@ public class SpeedAlarmActivity extends ActionBarActivity {
             isBound = false;
         }
     };
+
+    /**
+     * Method called when Speed Calculation Service is successfully bound
+     */
+    public void beginWorkout() {
+
+        Timer speedTimer = new Timer();
+        speedTimer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                if (!speedCalculator.searchingForSignal()) {
+                    speed = speedCalculator.getCurrentSpeed();
+                    updateSpeed(speed);
+                }
+            }
+        }, 0, 1000);
+
+    }
 }
