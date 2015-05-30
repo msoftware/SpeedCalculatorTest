@@ -23,8 +23,12 @@ public class SpeedAlarmActivity extends ActionBarActivity {
     public SpeedCalculationService speedCalculator;
     boolean isBound = false;
 
+    // Millisecond conversion values
     final int MILLI_TO_SEC = 1000;
     final int SEC_TO_HOUR = 3600;
+
+    // Goal mile times for each part
+    final double PART_ONE_GOAL_PACE = 8.0;
 
     double currentPace, goalPace;
     double speed;
@@ -45,7 +49,6 @@ public class SpeedAlarmActivity extends ActionBarActivity {
 
         // Starts the service for calulating user's speed
         bindService(i, speedConnection, Context.BIND_AUTO_CREATE);
-        //startService(i);
 
         vibrator = (Vibrator) this.getSystemService(Context.VIBRATOR_SERVICE);
 
@@ -177,9 +180,6 @@ public class SpeedAlarmActivity extends ActionBarActivity {
             isBound = true;
             speedCalculator = binder.getService();
 
-            // Program hangs here while establishing GPS signal
-            //while(speedCalculator.searchingForSignal());
-
             beginWorkout();
         }
 
@@ -193,14 +193,25 @@ public class SpeedAlarmActivity extends ActionBarActivity {
      * Method called when Speed Calculation Service is successfully bound
      */
     public void beginWorkout() {
-
         Timer speedTimer = new Timer();
+        updateGoalPace(PART_ONE_GOAL_PACE);
         speedTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
                 if (!speedCalculator.searchingForSignal()) {
-                    speed = speedCalculator.getCurrentSpeed();
-                    updateSpeed(speed);
+
+                    // Forces GUI updates to happen on the Activity UI thread
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            speed = speedCalculator.getCurrentSpeed();
+                            updateSpeed(speed);
+
+                            currentPace = 60 / speed;
+                            updateCurrentPace(currentPace);
+                        }
+                    });
+
                 }
             }
         }, 0, 1000);

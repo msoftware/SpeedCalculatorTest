@@ -93,7 +93,7 @@ public class SpeedCalculationService extends Service {
      * @return distance in miles
      */
     private double haversine(double lat1, double lon1, double lat2, double lon2) {
-        final double EARTH_RADIUS_M = 3959;
+        final double EARTH_RADIUS_M = 3959.0;
 
         double dLon, dLat, a, c, distance;
 
