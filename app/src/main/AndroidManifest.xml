@@ -30,7 +30,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".SpeedAlarmActivity"
+            android:name=".IntervalWorkoutActivity"
             android:label="@string/title_activity_main_menu" >
         </activity>
 
@@ -39,6 +39,15 @@
             android:enabled="true"
             android:exported="true" >
         </service>
+
+        <activity
+            android:name=".CrossCountrySpeed"
+            android:label="@string/title_activity_cross_country_speed" >
+        </activity>
+        <activity
+            android:name=".CrossCountryEndurance"
+            android:label="@string/title_activity_cross_country_endurance" >
+        </activity>
     </application>
 
 </manifest>

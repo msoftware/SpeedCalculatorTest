@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Binder;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.widget.Toast;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -18,13 +17,16 @@ public class SpeedCalculationService extends Service {
 
     private final IBinder binder = new SpeedCalculationBinder();
 
-    LocationManager locationManager;
+    LocationManager  locationManager;
     LocationListener locationListener;
     boolean signalFound = false;
 
     // Tracks distance traveled between location calls
     double distanceTraveled = 0;
     double speed = 0;
+
+    double speedSum = 0; // Sums speed calculations between speed update requests
+    int ticks = 0;      // Tracks number of location reqeuests in between speed update requests
 
     public SpeedCalculationService() {
     }
@@ -43,6 +45,7 @@ public class SpeedCalculationService extends Service {
             double currentTime, timeElapsed;
 
             public void onLocationChanged(Location location) {
+                ticks++;
 
                 if (!signalFound) {
                     // Prime old locations for first distance calculation
@@ -57,15 +60,15 @@ public class SpeedCalculationService extends Service {
                 currentTime = System.currentTimeMillis();
                 timeElapsed = currentTime - startTime;
 
-                distanceTraveled += haversine(latOld, lonOld, latNew, lonNew);
+                distanceTraveled = haversine(latOld, lonOld, latNew, lonNew);
                 if (distanceTraveled > 1000) { distanceTraveled = 0; } // Handles start errors
 
-                speed = distanceTraveled / timeElapsed * MILLI_TO_SEC * SEC_TO_HOUR;
+                speedSum += distanceTraveled / (timeElapsed * MILLI_TO_SEC * SEC_TO_HOUR);
 
                 latOld = latNew;
                 lonOld = lonNew;
-
             }
+
             public void onStatusChanged(String Provider, int status, Bundle extras) {}
 
             public void onProviderEnabled(String provider) {}
@@ -80,7 +83,7 @@ public class SpeedCalculationService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         // This service runs until it is stopped
-        Toast.makeText(this, "Service Started", Toast.LENGTH_LONG).show();
+        //Toast.makeText(this, "Service Started", Toast.LENGTH_LONG).show();
         return START_STICKY;
     }
 
@@ -116,7 +119,10 @@ public class SpeedCalculationService extends Service {
      * @return the current speed in mph format
      */
     public double getCurrentSpeed() {
-        return this.speed;
+        speed = speedSum / ticks;
+        speedSum = 0; // Reset for next iteration
+        ticks = 0;    // Reset for next iteration
+        return speed;
     }
 
     /**
@@ -131,7 +137,7 @@ public class SpeedCalculationService extends Service {
     public void onDestroy() {
         super.onDestroy();
         locationManager.removeUpdates(locationListener);
-        Toast.makeText(this, "Service Stopped", Toast.LENGTH_LONG).show();
+        //Toast.makeText(this, "Service Stopped", Toast.LENGTH_LONG).show();
     }
 
     // Binder class that will bind to the workout activities

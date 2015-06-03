@@ -1,6 +1,5 @@
 package com.example.stropheum.speedcalculatortest;
 
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -10,13 +9,10 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.view.View.OnClickListener;
 
-
 public class MainMenu extends ActionBarActivity {
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
 
@@ -58,7 +54,7 @@ public class MainMenu extends ActionBarActivity {
         wb1.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), SpeedAlarmActivity.class));
+                startActivity(new Intent(getApplicationContext(), IntervalWorkoutActivity.class));
             }
         });
     }
@@ -71,7 +67,7 @@ public class MainMenu extends ActionBarActivity {
         wb2.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), SpeedAlarmActivity.class));
+                startActivity(new Intent(getApplicationContext(), CrossCountrySpeed.class));
             }
         });
     }
@@ -84,7 +80,7 @@ public class MainMenu extends ActionBarActivity {
         wb3.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), SpeedAlarmActivity.class));
+                startActivity(new Intent(getApplicationContext(), CrossCountryEndurance.class));
             }
         });
     }
@@ -97,7 +93,7 @@ public class MainMenu extends ActionBarActivity {
         wb4.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), SpeedAlarmActivity.class));
+                startActivity(new Intent(getApplicationContext(), IntervalWorkoutActivity.class));
             }
         });
     }
@@ -110,7 +106,7 @@ public class MainMenu extends ActionBarActivity {
         wb5.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), SpeedAlarmActivity.class));
+                startActivity(new Intent(getApplicationContext(), IntervalWorkoutActivity.class));
             }
         });
     }
