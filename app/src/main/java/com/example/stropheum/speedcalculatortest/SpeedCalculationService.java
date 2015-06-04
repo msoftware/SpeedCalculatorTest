@@ -63,7 +63,7 @@ public class SpeedCalculationService extends Service {
                 distanceTraveled = haversine(latOld, lonOld, latNew, lonNew);
                 if (distanceTraveled > 1000) { distanceTraveled = 0; } // Handles start errors
 
-                speedSum += distanceTraveled / (timeElapsed * MILLI_TO_SEC * SEC_TO_HOUR);
+                speedSum += (distanceTraveled / timeElapsed) * MILLI_TO_SEC * SEC_TO_HOUR;
 
                 latOld = latNew;
                 lonOld = lonNew;
