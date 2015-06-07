@@ -3,18 +3,17 @@ package com.example.stropheum.speedcalculatortest;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
-import android.os.IBinder;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.TextView;
 import android.os.Vibrator;
-import com.example.stropheum.speedcalculatortest.SpeedCalculationService.SpeedCalculationBinder;
-
 import java.util.Timer;
 import java.util.TimerTask;
+import android.content.ServiceConnection;
+import android.os.IBinder;
+import android.view.Menu;
+import android.view.MenuItem;
+import com.example.stropheum.speedcalculatortest.SpeedCalculationService.SpeedCalculationBinder;
 
 public class IntervalWorkoutActivity extends ActionBarActivity {
 
@@ -74,7 +73,7 @@ public class IntervalWorkoutActivity extends ActionBarActivity {
 
         i = new Intent(this, SpeedCalculationService.class);
 
-        // Starts the service for calulating user's speed
+        // Starts the service for calculating user's speed
         bindService(i, speedConnection, Context.BIND_AUTO_CREATE);
 
         vibrator = (Vibrator) this.getSystemService(Context.VIBRATOR_SERVICE);
@@ -212,6 +211,7 @@ public class IntervalWorkoutActivity extends ActionBarActivity {
      */
     public void partOneBegin() {
         partOneFirstRun = true;
+        speedCalculator.resetValues();
 
         final Timer partOneTimer = new Timer();
         partOneTimer.scheduleAtFixedRate(new TimerTask() {
@@ -271,6 +271,7 @@ public class IntervalWorkoutActivity extends ActionBarActivity {
      */
     public void partTwoBegin() {
         partTwoFirstRun = true;
+        speedCalculator.resetValues();
 
         final Timer partTwoTimer = new Timer();
         partTwoTimer.scheduleAtFixedRate(new TimerTask() {
@@ -326,6 +327,7 @@ public class IntervalWorkoutActivity extends ActionBarActivity {
      */
     public void partThreeBegin() {
         partThreeFirstRun = true;
+        speedCalculator.resetValues();
 
         final Timer partThreeTimer = new Timer();
         partThreeTimer.scheduleAtFixedRate(new TimerTask() {
@@ -381,6 +383,7 @@ public class IntervalWorkoutActivity extends ActionBarActivity {
      */
     public void partFourBegin() {
         partFourFirstRun = true;
+        speedCalculator.resetValues();
 
         final Timer partFourTimer = new Timer();
         partFourTimer.scheduleAtFixedRate(new TimerTask() {
@@ -436,6 +439,7 @@ public class IntervalWorkoutActivity extends ActionBarActivity {
      */
     public void partFiveBegin() {
         partFiveFirstRun = true;
+        speedCalculator.resetValues();
 
         final Timer partFiveTimer = new Timer();
         partFiveTimer.scheduleAtFixedRate(new TimerTask() {
@@ -491,6 +495,7 @@ public class IntervalWorkoutActivity extends ActionBarActivity {
      */
     public void partSixBegin() {
         partSixFirstRun = true;
+        speedCalculator.resetValues();
 
         final Timer partSixTimer = new Timer();
         partSixTimer.scheduleAtFixedRate(new TimerTask() {
@@ -546,6 +551,7 @@ public class IntervalWorkoutActivity extends ActionBarActivity {
      */
     public void partSevenBegin() {
         partSevenFirstRun = true;
+        speedCalculator.resetValues();
 
         final Timer partSevenTimer = new Timer();
         partSevenTimer.scheduleAtFixedRate(new TimerTask() {

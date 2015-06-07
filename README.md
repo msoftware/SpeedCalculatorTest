@@ -2,6 +2,6 @@
 ## Android app for calculating speed via GPS
 
 ### TODO: 
-* Change interval to 30 seconds for smoother speed averages 
-* Implement menu system 
 * Design proper user interface
+* Implement official assets for menu and workout interface
+* Test new speed calculation method (resetting speedsum on client speed requests)

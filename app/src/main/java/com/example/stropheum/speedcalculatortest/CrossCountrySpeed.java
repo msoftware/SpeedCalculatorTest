@@ -3,19 +3,17 @@ package com.example.stropheum.speedcalculatortest;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
-import android.os.IBinder;
 import android.os.Vibrator;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.TextView;
-import com.example.stropheum.speedcalculatortest.SpeedCalculationService.SpeedCalculationBinder;
-
 import java.util.Timer;
 import java.util.TimerTask;
-
+import android.content.ServiceConnection;
+import android.os.IBinder;
+import android.view.Menu;
+import android.view.MenuItem;
+import com.example.stropheum.speedcalculatortest.SpeedCalculationService.SpeedCalculationBinder;
 
 public class CrossCountrySpeed extends ActionBarActivity {
 
@@ -207,6 +205,7 @@ public class CrossCountrySpeed extends ActionBarActivity {
      */
     public void partOneBegin() {
         partOneFirstRun = true;
+        speedCalculator.resetValues();
 
         final Timer partOneTimer = new Timer();
         partOneTimer.scheduleAtFixedRate(new TimerTask() {
@@ -266,6 +265,7 @@ public class CrossCountrySpeed extends ActionBarActivity {
      */
     public void partTwoBegin() {
         partTwoFirstRun = true;
+        speedCalculator.resetValues();
 
         final Timer partTwoTimer = new Timer();
         partTwoTimer.scheduleAtFixedRate(new TimerTask() {
@@ -321,6 +321,7 @@ public class CrossCountrySpeed extends ActionBarActivity {
      */
     public void partThreeBegin() {
         partThreeFirstRun = true;
+        speedCalculator.resetValues();
 
         final Timer partThreeTimer = new Timer();
         partThreeTimer.scheduleAtFixedRate(new TimerTask() {
@@ -376,6 +377,7 @@ public class CrossCountrySpeed extends ActionBarActivity {
      */
     public void partFourBegin() {
         partFourFirstRun = true;
+        speedCalculator.resetValues();
 
         final Timer partFourTimer = new Timer();
         partFourTimer.scheduleAtFixedRate(new TimerTask() {
@@ -431,6 +433,7 @@ public class CrossCountrySpeed extends ActionBarActivity {
      */
     public void partFiveBegin() {
         partFiveFirstRun = true;
+        speedCalculator.resetValues();
 
         final Timer partFiveTimer = new Timer();
         partFiveTimer.scheduleAtFixedRate(new TimerTask() {
@@ -481,5 +484,4 @@ public class CrossCountrySpeed extends ActionBarActivity {
             }
         }, 0, 5000);
     }
-
 }

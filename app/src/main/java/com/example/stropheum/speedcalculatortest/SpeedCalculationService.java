@@ -5,10 +5,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.IBinder;
+import android.location.LocationListener;
 
 public class SpeedCalculationService extends Service {
 
@@ -41,8 +41,8 @@ public class SpeedCalculationService extends Service {
             double lonNew, lonOld;
             double latNew, latOld;
 
-            double startTime = System.currentTimeMillis();
-            double currentTime, timeElapsed;
+            double startTime;
+            double currentTime, deltaTime;
 
             public void onLocationChanged(Location location) {
                 ticks++;
@@ -51,22 +51,29 @@ public class SpeedCalculationService extends Service {
                     // Prime old locations for first distance calculation
                     latOld = Math.toRadians(location.getLatitude());
                     lonOld = Math.toRadians(location.getLongitude());
+                    // Initialize starting time
+                    startTime = System.currentTimeMillis();
+
                     signalFound = true;
                 }
 
                 latNew = Math.toRadians(location.getLatitude());
                 lonNew = Math.toRadians(location.getLongitude());
 
+                // Calculate elapsed time (in hours) since last location request
                 currentTime = System.currentTimeMillis();
-                timeElapsed = currentTime - startTime;
+                deltaTime = (currentTime - startTime) / MILLI_TO_SEC / SEC_TO_HOUR;
 
+                // Compute distance traveled (in miles) since last location request
                 distanceTraveled = haversine(latOld, lonOld, latNew, lonNew);
-                if (distanceTraveled > 1000) { distanceTraveled = 0; } // Handles start errors
 
-                speedSum += (distanceTraveled / timeElapsed) * MILLI_TO_SEC * SEC_TO_HOUR;
+                // Compute speed (in miles/hour) since last location request
+                speedSum += distanceTraveled / deltaTime;
 
                 latOld = latNew;
                 lonOld = lonNew;
+
+                startTime = currentTime;
             }
 
             public void onStatusChanged(String Provider, int status, Bundle extras) {}
@@ -120,9 +127,19 @@ public class SpeedCalculationService extends Service {
      */
     public double getCurrentSpeed() {
         speed = speedSum / ticks;
-        speedSum = 0; // Reset for next iteration
-        ticks = 0;    // Reset for next iteration
+        speedSum = 0;
+        ticks = 0;
+
         return speed;
+    }
+
+    /**
+     * Resets speedsum and ticks
+     * prevents average speed from carrying over between parts
+     */
+    public void resetValues() {
+        speedSum = 0;
+        ticks = 0;
     }
 
     /**
