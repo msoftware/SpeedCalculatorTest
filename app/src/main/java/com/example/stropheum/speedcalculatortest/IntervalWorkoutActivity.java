@@ -262,7 +262,7 @@ public class IntervalWorkoutActivity extends ActionBarActivity {
 
                 }
             }
-        }, 0, 5000); // Updates every 5 seconds
+        }, 0, 1000); // Updates every 5 seconds
 
     }
 
@@ -319,7 +319,7 @@ public class IntervalWorkoutActivity extends ActionBarActivity {
                     });
                 }
             }
-        }, 0, 5000);
+        }, 0, 1000);
     }
 
     /**
@@ -375,7 +375,7 @@ public class IntervalWorkoutActivity extends ActionBarActivity {
                     });
                 }
             }
-        }, 0, 5000);
+        }, 0, 1000);
     }
 
     /**
@@ -431,7 +431,7 @@ public class IntervalWorkoutActivity extends ActionBarActivity {
                     });
                 }
             }
-        }, 0, 5000);
+        }, 0, 1000);
     }
 
     /**
@@ -487,7 +487,7 @@ public class IntervalWorkoutActivity extends ActionBarActivity {
                     });
                 }
             }
-        }, 0, 5000);
+        }, 0, 1000);
     }
 
     /**
@@ -543,7 +543,7 @@ public class IntervalWorkoutActivity extends ActionBarActivity {
                     });
                 }
             }
-        }, 0, 5000);
+        }, 0, 1000);
     }
 
     /**
@@ -600,6 +600,6 @@ public class IntervalWorkoutActivity extends ActionBarActivity {
                     });
                 }
             }
-        }, 0, 5000);
+        }, 0, 1000);
     }
 }
