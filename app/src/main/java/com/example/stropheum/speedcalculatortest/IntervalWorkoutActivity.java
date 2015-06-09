@@ -43,9 +43,12 @@ public class IntervalWorkoutActivity extends ActionBarActivity {
 
     double currentPace, goalPace;
     double speed;
+    double distance = 0;
 
     // Tracks the time a part starts and how long it has been running for
     double timeStart, timeElapsed;
+
+    double workoutTimeStart;
 
     // Tracks the start time and elapsed time of individual parts
     double partOneTimeStart,   partOneTimeElapsed;
@@ -161,6 +164,15 @@ public class IntervalWorkoutActivity extends ActionBarActivity {
     }
 
     /**
+     * Updates curent distance traveled
+     * @param distance The current overall distance traveled
+     */
+    private void updateDistance(double distance) {
+        final TextView distanceText = (TextView) findViewById(R.id.DistanceVal);
+        distanceText.setText(String.format("%.3f", distance));
+    }
+
+    /**
      * Checks current pace and assigns appropriate text
      */
     private void paceAlert() {
@@ -168,18 +180,8 @@ public class IntervalWorkoutActivity extends ActionBarActivity {
 
         if (currentPace > goalPace + MILE_TIME_ERROR) {
             paceText = "Speed up";
-            vibrator.vibrate(300);
-
-            try {
-                Thread.sleep(300);
-            } catch (Exception e) {
-            }
-            vibrator.vibrate(300);
-            try {
-                Thread.sleep(300);
-            } catch (Exception e) {
-            }
-            vibrator.vibrate(300);
+            long[] pattern = {0, 200, 200, 200, 200, 200};
+            vibrator.vibrate(pattern, -1);
 
         } else if (currentPace < goalPace - MILE_TIME_ERROR) {
             paceText = "Slow Down";
@@ -188,6 +190,18 @@ public class IntervalWorkoutActivity extends ActionBarActivity {
             paceText = "Perfect Pace!";
         }
         updatePaceText(paceText);
+    }
+
+    /**
+     * Updates the timer display on current workout to reflect total elapsed time
+     */
+    private void updateTime() {
+        double time = (System.currentTimeMillis() - workoutTimeStart) / 1000;
+        int minutes = (int) time / 60;
+        int seconds = (int) time % 60;
+
+        final TextView timeView = (TextView) findViewById(R.id.timeLabel);
+        timeView.setText(String.format("%d:%02d", minutes, seconds));
     }
 
     ServiceConnection speedConnection = new ServiceConnection() {
@@ -226,6 +240,9 @@ public class IntervalWorkoutActivity extends ActionBarActivity {
                             if (partOneFirstRun) {
                                 timeStart = System.currentTimeMillis();
                                 partOneTimeStart = System.currentTimeMillis();
+                                workoutTimeStart = System.currentTimeMillis();
+
+                                updateTime();
 
                                 paceText = "Begin!";
                                 updatePaceText(paceText);
@@ -233,11 +250,15 @@ public class IntervalWorkoutActivity extends ActionBarActivity {
                                 goalPace = PART_ONE_GOAL_PACE;
                                 updateGoalPace(goalPace);
 
+                                distance = 0.0;
+                                updateDistance(distance);
+
                                 partOneFirstRun = false;
                             }
 
                             // Tracks the elapsed time since last alert
                             timeElapsed = System.currentTimeMillis() - timeStart;
+                            updateTime();
 
                             // Tracks the total elapsed time of the workout part
                             partOneTimeElapsed = System.currentTimeMillis() - partOneTimeStart;
@@ -247,6 +268,9 @@ public class IntervalWorkoutActivity extends ActionBarActivity {
 
                             currentPace = 60 / speed;
                             updateCurrentPace(currentPace);
+
+                            distance = speedCalculator.getCurrentDistance();
+                            updateDistance(distance);
 
                             if (partOneTimeElapsed >= PART_ONE_DURATION) {
                                 // Terminate current part and start the next
@@ -296,6 +320,7 @@ public class IntervalWorkoutActivity extends ActionBarActivity {
 
                             // Tracks the elapsed time since last alert
                             timeElapsed = System.currentTimeMillis() - timeStart;
+                            updateTime();
 
                             // Tracks the total elapsed time of the workout part
                             partTwoTimeElapsed = System.currentTimeMillis() - partTwoTimeStart;
@@ -352,6 +377,7 @@ public class IntervalWorkoutActivity extends ActionBarActivity {
 
                             // Tracks the elapsed time since last alert
                             timeElapsed = System.currentTimeMillis() - timeStart;
+                            updateTime();
 
                             // Tracks the total elapsed time of the workout part
                             partThreeTimeElapsed = System.currentTimeMillis() - partThreeTimeStart;
@@ -408,6 +434,7 @@ public class IntervalWorkoutActivity extends ActionBarActivity {
 
                             // Tracks the elapsed time since last alert
                             timeElapsed = System.currentTimeMillis() - timeStart;
+                            updateTime();
 
                             // Tracks the total elapsed time of the workout part
                             partFourTimeElapsed = System.currentTimeMillis() - partFourTimeStart;
@@ -464,6 +491,7 @@ public class IntervalWorkoutActivity extends ActionBarActivity {
 
                             // Tracks the elapsed time since last alert
                             timeElapsed = System.currentTimeMillis() - timeStart;
+                            updateTime();
 
                             // Tracks the total elapsed time of the workout part
                             partFiveTimeElapsed = System.currentTimeMillis() - partFiveTimeStart;
@@ -520,6 +548,7 @@ public class IntervalWorkoutActivity extends ActionBarActivity {
 
                             // Tracks the elapsed time since last alert
                             timeElapsed = System.currentTimeMillis() - timeStart;
+                            updateTime();
 
                             // Tracks the total elapsed time of the workout part
                             partSixTimeElapsed = System.currentTimeMillis() - partSixTimeStart;
@@ -576,6 +605,7 @@ public class IntervalWorkoutActivity extends ActionBarActivity {
 
                             // Tracks the elapsed time since last alert
                             timeElapsed = System.currentTimeMillis() - timeStart;
+                            updateTime();
 
                             // Tracks the total elapsed time of the workout part
                             partSevenTimeElapsed = System.currentTimeMillis() - partSevenTimeStart;

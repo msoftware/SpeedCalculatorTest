@@ -25,6 +25,13 @@ public class SpeedCalculationService extends Service {
     double distanceTraveled = 0;
     double speed = 0;
 
+    // Tracks the longitude and latitude of the previous and current location calls
+    double lonNew, lonOld;
+    double latNew, latOld;
+
+    double startLatitude, startLongitude;
+    double totalDistance;
+
     double speedSum = 0; // Sums speed calculations between speed update requests
     int ticks = 0;      // Tracks number of location reqeuests in between speed update requests
 
@@ -36,10 +43,6 @@ public class SpeedCalculationService extends Service {
         locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 
         locationListener = new LocationListener() {
-
-            // Tracks the longitude and latitude of the previous and current location calls
-            double lonNew, lonOld;
-            double latNew, latOld;
 
             double startTime;
             double currentTime, deltaTime;
@@ -53,6 +56,9 @@ public class SpeedCalculationService extends Service {
                     lonOld = Math.toRadians(location.getLongitude());
                     // Initialize starting time
                     startTime = System.currentTimeMillis();
+                    // Initialize starting location
+                    startLatitude  = Math.toRadians(location.getLatitude());
+                    startLongitude = Math.toRadians(location.getLongitude());
 
                     signalFound = true;
                 }
@@ -131,6 +137,15 @@ public class SpeedCalculationService extends Service {
         ticks = 0;
 
         return speed;
+    }
+
+    /**
+     * Computes the total distance traveled during workout
+     * @return the total distance traveled (in miles)
+     */
+    public double getCurrentDistance() {
+        double result = haversine(startLatitude, startLongitude, latNew, lonNew);
+        return result;
     }
 
     /**
